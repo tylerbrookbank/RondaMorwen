@@ -1,0 +1,16 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Objects\Characters\PlayerController.cs">
+    <Files>
+      <File FileName="Assets\Scripts\System\CameraDeadzoneFollow.cs" Line="27" Column="24" />
+      <File FileName="Assets\Scripts\Objects\Physics\PhysicsObject.cs" Line="25" Column="18" />
+      <File FileName="Assets\Scripts\Objects\Characters\PlayerController.cs" Line="175" Column="27" />
+      <File FileName="Assets\Scripts\System\ZoneTransfer.cs" Line="34" Column="44" />
+      <File FileName="Assets\Scripts\Objects\Environment\Door.cs" Line="33" Column="11" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
