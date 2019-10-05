@@ -71,6 +71,8 @@
      <Compile Include="Assets\Scripts\Objects\Environment\Background\Buildings.cs" />
      <Compile Include="Assets\Scripts\Objects\Environment\Background\BuildingWindow.cs" />
      <Compile Include="Assets\Scripts\Objects\Environment\Background\Star.cs" />
+     <Compile Include="Assets\Scripts\Objects\Environment\Destructables\BitCollection.cs" />
+     <Compile Include="Assets\Scripts\Objects\Environment\Destructables\Destructable.cs" />
      <Compile Include="Assets\Scripts\Objects\Environment\Door.cs" />
      <Compile Include="Assets\Scripts\Objects\Physics\PhysicsObject.cs" />
      <Compile Include="Assets\Scripts\System\CameraDeadzoneFollow.cs" />

@@ -16,6 +16,11 @@ public class Buildings : MonoBehaviour {
     public float frontSpeed;
     public float backSpeed;
 
+    Vector3 frontBackOffset;
+
+    bool hitLeftBound;
+    bool hitRightBound;
+
 	// Use this for initialization
 	void Start () {
 
@@ -42,6 +47,11 @@ public class Buildings : MonoBehaviour {
 
         currentPos = cameraTransform.position;
 
+        hitLeftBound = false;
+        hitRightBound = false;
+
+        frontBackOffset = new Vector3();
+
         GetOffsets();
 
     }
@@ -49,10 +59,10 @@ public class Buildings : MonoBehaviour {
     void CheckBounds() {
         //Front: (-7.7, -3.3, 12.8)	Back: (-10.8, -2.3, 13.7)
         //back bound Front: (-36.6, -3.3, 12.8)	Back: (-39.7, -2.3, 13.7)
-        Vector3 frontLeftBound = new Vector3(-7.7f, -3.3f, 12.8f);
-        Vector3 backLeftBound = new Vector3(-10.8f, -2.3f, 13.7f);
-        Vector3 frontRightBound = new Vector3(-36.6f, -3.3f, 12.8f);
-        Vector3 backRightBound = new Vector3(-39.7f, -2.3f, 13.7f);
+        Vector3 frontLeftBound = new Vector3(-20.7f, -3.3f, 12.8f);
+        Vector3 backLeftBound = new Vector3(-20.8f, -2.3f, 13.7f);
+        Vector3 frontRightBound = new Vector3(-70.6f, -3.3f, 12.8f);
+        Vector3 backRightBound = new Vector3(-70.7f, -2.3f, 13.7f);
 
         Vector3 cameraPos = cameraTransform.position;
         Vector3 frontPos = frontBuildings.position;
@@ -81,21 +91,36 @@ public class Buildings : MonoBehaviour {
         if (frontOffset.x > frontLeftBound.x) {
             frontChangePos = true;
             frontNewPos.x = frontLeftBound.x + cameraPos.x;
+            hitLeftBound = true;
         } else if(frontOffset.x < frontRightBound.x) {
             frontChangePos = true;
             frontNewPos.x = frontRightBound.x + cameraPos.x;
+            hitRightBound = true;
         }
 
         if (backOffset.x > backLeftBound.x) {
             backChangePos = true;
             backNewPos.x = backLeftBound.x + cameraPos.x;
+            hitLeftBound = true;
         } else if (backOffset.x < backRightBound.x) {
             backChangePos = true;
             backNewPos.x = backRightBound.x + cameraPos.x;
+            hitRightBound = true;
         }
 
         frontBuildings.position = frontChangePos ? frontNewPos : frontPos;
         backBuildings.position = backChangePos ? backNewPos : backPos;
+
+        if(hitLeftBound || hitRightBound) {
+            Vector3 fPos = frontBuildings.position;
+            Vector3 bPos = backBuildings.position;
+            float x = fPos.x - bPos.x;
+            float y = fPos.y - bPos.y;
+            float z = fPos.z - bPos.z;
+
+            frontBackOffset = new Vector3(x,y,z);
+
+        }
 
     }
 
@@ -139,7 +164,7 @@ public class Buildings : MonoBehaviour {
         Vector3 front = new Vector3(frontX,frontY,frontZ);
         Vector3 back = new Vector3(backX, backY, backZ);
 
-        Debug.Log("Front: " + front + "\tBack: "+back);
+       // Debug.Log("Front: " + front + "\tBack: "+back);
 
     }
 
@@ -157,14 +182,42 @@ public class Buildings : MonoBehaviour {
 
 	}
 
+    void BoundHitMove() {
+
+        Vector3 frontPos = frontBuildings.position;
+        Vector3 backPos = backBuildings.position;
+
+        float x = frontBackOffset.x + backPos.x;
+        float y = frontBackOffset.y + backPos.y;
+        float z = frontBackOffset.z + backPos.z;
+
+        Vector3 newPos = new Vector3(frontBackOffset.x + backPos.x, frontBackOffset.y + backPos.y, frontBackOffset.z + backPos.z);
+
+        frontBuildings.position = newPos;
+
+    }
+
     void MoveBuildings(Vector3 position) {
         
         float direction = (position.x - currentPos.x) > 0 ? 1 : -1;
 
+        if(hitLeftBound || hitRightBound) {
+            if (hitLeftBound && direction > 0) {
+                hitLeftBound = false;
+            }
+            else if (hitRightBound && direction < 0) {
+                hitRightBound = false;
+            }
+            else {
+                BoundHitMove();
+                return;
+            }
+        }
+
         float frontNewX = frontBuildings.position.x;
         frontNewX += direction * frontSpeed * Time.deltaTime;
 
-        Debug.Log(frontBuildings.position.x + " " + frontNewX);
+        //Debug.Log(frontBuildings.position.x + " " + frontNewX);
 
         float backNewX = backBuildings.position.x;
         backNewX += direction * backSpeed * Time.deltaTime;

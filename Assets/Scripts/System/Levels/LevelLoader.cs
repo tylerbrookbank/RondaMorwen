@@ -43,20 +43,75 @@ public class LevelLoader : MonoBehaviour {
 
     private void LoadLevel() {
         loaded = true;
-        Debug.Log("Level Loaded");
+        Debug.Log(levelName + " Level Loaded");
         foreach(Transform child in transform) {
             if (child.name.Equals("EESpawnPoint")) {
                 GameObject obj = (GameObject)Instantiate(Resources.Load("Characters/EasyEnemy"));
-                if(obj != null) {
+                if (obj != null) {
                     obj.transform.position = child.position;
                     obj.name = levelName + "EasyEnemy";
                 } else {
                     Debug.Log("Failed to load enemey");
                 }
-            } else if(child.name.Contains("BackgroundSpawner_")) {
+            } else if (child.name.Contains("BitCollectionSpawner")) {
+                SpawnBitCollection(child, child.name);
+            } else if (child.name.Contains("BackgroundSpawner_")) {
                 SpawnBackground(child, child.name);
             }
         }
+    }
+
+    private void SpawnBitCollection(Transform child, string name) {
+        int startIndex = name.IndexOf("_") + 1;
+        string type = name.Substring(startIndex);
+        switch (type) {
+            case "100": 
+                {
+                    GameObject obj = (GameObject)Instantiate(Resources.Load("Interactables/BitCollection"));
+                    if (obj != null) {
+                        SetUpBitCollection(obj, child, 100);
+                    }
+                    else {
+                        Debug.Log("Failed to Load " + child.name);
+                    }
+                }
+                break;
+            case "500": 
+                {
+                    GameObject obj = (GameObject)Instantiate(Resources.Load("Interactables/BitCollection"));
+                    if (obj != null) {
+                        SetUpBitCollection(obj, child, 500);
+                    }
+                    else {
+                        Debug.Log("Failed to Load " + child.name);
+                    }
+                }
+                break;
+            case "1000": 
+                {
+                    GameObject obj = (GameObject)Instantiate(Resources.Load("Interactables/BitCollection"));
+                    if (obj != null) {
+                        SetUpBitCollection(obj, child, 1000);
+                    }
+                    else {
+                        Debug.Log("Failed to Load " + child.name);
+                    }
+                }
+                break;
+        }
+    }
+
+    private void SetUpBitCollection(GameObject obj, Transform child, int bitAmount) {
+        BitCollection bc = (BitCollection)obj.GetComponent(typeof(BitCollection));
+        if (bc != null) {
+            bc.SetBitAmount(bitAmount);
+            bc.SetSpawnerObject(child.gameObject);
+        }
+        else { 
+            Debug.Log("couldn't find bit collection script");
+        }
+        obj.transform.position = child.position;
+        obj.name = levelName + " Bit Collection " + bitAmount;
     }
 
     private void SpawnBackground(Transform child, string name) {
@@ -78,11 +133,12 @@ public class LevelLoader : MonoBehaviour {
 
     private void UnloadLevel() {
         loaded = false;
-        Debug.Log("Level UnLoaded");
+        Debug.Log(levelName + " Level UnLoaded");
         object[] obj = GameObject.FindObjectsOfType(typeof(GameObject));
         foreach (GameObject o in obj) {
             if(o.name.Equals(levelName + "EasyEnemy")
-                || o.name.Equals(levelName + "Buildings")) {
+                || o.name.Equals(levelName + "Buildings")
+                || o.name.Contains(levelName + " Bit Collection")) {
                 Destroy(o);
             }
         }

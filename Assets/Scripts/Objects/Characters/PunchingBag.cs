@@ -60,7 +60,6 @@ public class PunchingBag : MonoBehaviour {
         PlayerCombatHelper p = null;
 
         int count = hitBox.GetContacts(contact);
-        Debug.Log("count is " + count);
         if (count > 0) {
             p = (PlayerCombatHelper)contact[0].gameObject.GetComponentInParent(typeof(PlayerCombatHelper));
         }
@@ -95,7 +94,7 @@ public class PunchingBag : MonoBehaviour {
     }
 
     private void ForcePush(float f) {
-        Vector3 push = new Vector3(f, 0f, 0f);
+        Vector3 push = new Vector3(f/8f, 0f, 0f);
         direction = f * -1;
         gameObject.transform.position = position + push;
         currentPosition = gameObject.transform.position;
@@ -110,9 +109,9 @@ public class PunchingBag : MonoBehaviour {
     }
 
     private void ShowDamageText(float dmg) {
-        GameObject obj = (GameObject) Instantiate(Resources.Load("DamageText"));
+        GameObject obj = (GameObject) Instantiate(Resources.Load("UI/DamageText"));
         if(obj != null) {
-            GameObject canvas = GameObject.Find("Canvas");
+            GameObject canvas = GameObject.Find("WorldHUD");
 
             float y;
             if(transform.parent != null) {
@@ -131,6 +130,7 @@ public class PunchingBag : MonoBehaviour {
             DamageText damageText = (DamageText)obj.GetComponent(typeof(DamageText));
             if(damageText != null) {
                 damageText.SetDamage(dmg);
+                damageText.SetCharacterTransform(transform);
                 damageText.SetPosition();
             } else {
                 Debug.Log("Failed to get DamageText Objext");
