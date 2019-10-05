@@ -45,7 +45,7 @@ public class LevelLoader : MonoBehaviour {
         loaded = true;
         Debug.Log("Level Loaded");
         foreach(Transform child in transform) {
-            if(child.name.Equals("EESpawnPoint")) {
+            if (child.name.Equals("EESpawnPoint")) {
                 GameObject obj = (GameObject)Instantiate(Resources.Load("Characters/EasyEnemy"));
                 if(obj != null) {
                     obj.transform.position = child.position;
@@ -53,8 +53,27 @@ public class LevelLoader : MonoBehaviour {
                 } else {
                     Debug.Log("Failed to load enemey");
                 }
+            } else if(child.name.Contains("BackgroundSpawner_")) {
+                SpawnBackground(child, child.name);
             }
         }
+    }
+
+    private void SpawnBackground(Transform child, string name) {
+
+        int startIndex = name.IndexOf("_") + 1;
+        string type = name.Substring(startIndex);
+        switch (type) {
+            case "Buildings":
+                GameObject obj = (GameObject)Instantiate(Resources.Load("Background/Buildings"));
+                if(obj != null) {
+                    obj.name = levelName + "Buildings";
+                } else {
+                    Debug.Log("Failed to Load Buildings");
+                }
+                break;
+        }
+
     }
 
     private void UnloadLevel() {
@@ -62,7 +81,8 @@ public class LevelLoader : MonoBehaviour {
         Debug.Log("Level UnLoaded");
         object[] obj = GameObject.FindObjectsOfType(typeof(GameObject));
         foreach (GameObject o in obj) {
-            if(o.name.Equals(levelName + "EasyEnemy")) {
+            if(o.name.Equals(levelName + "EasyEnemy")
+                || o.name.Equals(levelName + "Buildings")) {
                 Destroy(o);
             }
         }
